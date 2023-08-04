@@ -1,7 +1,7 @@
 ﻿
 namespace NI_Elvis_Form2
 {
-    partial class Login
+    partial class LoginForm
     {
         /// <summary>
         /// Required designer variable.
@@ -103,7 +103,7 @@ namespace NI_Elvis_Form2
             this.textBox2.TabIndex = 6;
             this.textBox2.UseSystemPasswordChar = true;
             // 
-            // Login
+            // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -115,8 +115,8 @@ namespace NI_Elvis_Form2
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
-            this.Name = "Login";
-            this.Text = "Login";
+            this.Name = "LoginForm";
+            this.Text = "LoginForm";
             this.Load += new System.EventHandler(this.Login_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

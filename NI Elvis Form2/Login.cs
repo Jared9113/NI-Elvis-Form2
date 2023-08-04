@@ -12,10 +12,10 @@ using System.Windows.Forms;
 
 namespace NI_Elvis_Form2
 {
-    public partial class Login : Form
+    public partial class LoginForm : Form
     {
         HttpClient client;
-        public Login()
+        public LoginForm()
         {
             InitializeComponent();
             client = new HttpClient();
@@ -29,35 +29,37 @@ namespace NI_Elvis_Form2
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var user = new User() { Email = textBox1.Text, Password = textBox2.Text };
+            var userData = new User() { Email = textBox1.Text, Password = textBox2.Text };
 
-            var postContent = new StringContent(JsonSerializer.Serialize(user, new JsonSerializerOptions()
+            var postContent = new StringContent(JsonSerializer.Serialize(userData, new JsonSerializerOptions()
             { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }), Encoding.UTF8, "application/json");
 
 
-            var result = client.PostAsync("/api/Values/Login", postContent).GetAwaiter().GetResult();
+            var result = client.PostAsync("/api/Values/LoginPath", postContent).GetAwaiter().GetResult();
 
-            var message = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            
 
-            if(message == "Login success")
+            
+
+            if (result.IsSuccessStatusCode)
             {
-                this.Hide();
-                Form1 form = new Form1();
-                form.Show();
+                var message = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                if (message == "Login success")
+                {
+                    this.Hide();
+                    Form1 form = new Form1();
+                    form.Show();
+                }
+                //var message = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                //label2.Text = message;
+                //this.Hide();
+                //Form1 form = new Form1();
+                //form.Show();
+                else
+                    label2.Text = message;
             }
 
-            //if (result.IsSuccessStatusCode)
-            //{
-            //    //var message = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            //    //label2.Text = message;
-            //    this.Hide();
-            //    Form1 form = new Form1();
-            //    form.Show();
-
-
-            //}
-
-            else { label2.Text = message; }
+            else { label2.Text = "Validation Error"; }
 
         }
 
