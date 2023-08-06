@@ -226,7 +226,6 @@ namespace NI_Elvis_Form2
             // knob4
             // 
             this.knob4.Caption = "Frequency (kHz)";
-            this.knob4.Enabled = false;
             this.knob4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.knob4.Location = new System.Drawing.Point(165, 19);
             this.knob4.MajorDivisions.LabelVisible = false;
@@ -236,11 +235,11 @@ namespace NI_Elvis_Form2
             this.knob4.Size = new System.Drawing.Size(153, 121);
             this.knob4.TabIndex = 6;
             this.knob4.Value = 100D;
+            this.knob4.AfterChangeValue += new NationalInstruments.UI.AfterChangeNumericValueEventHandler(this.knob4_AfterChangeValue);
             // 
             // knob3
             // 
             this.knob3.Caption = "Amplitude (V)";
-            this.knob3.Enabled = false;
             this.knob3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.knob3.Location = new System.Drawing.Point(6, 19);
             this.knob3.Name = "knob3";
@@ -248,6 +247,7 @@ namespace NI_Elvis_Form2
             this.knob3.Size = new System.Drawing.Size(153, 121);
             this.knob3.TabIndex = 5;
             this.knob3.Value = 4D;
+            this.knob3.AfterChangeValue += new NationalInstruments.UI.AfterChangeNumericValueEventHandler(this.knob3_AfterChangeValue);
             // 
             // fGenStop
             // 

@@ -22,8 +22,8 @@ namespace NI_Elvis_Form2
         //private DispatcherTimer dispatcherTimer;
         private NationalInstruments.DAQmx.Task oscilloscopeTask;
         private NationalInstruments.DAQmx.Task fGenTask;
-        private int samples = 500;
-        private int samplingRate = 250;
+        private int samples = 1000;
+        private int samplingRate = 3000;
         //private static string waveType;
 
 
@@ -418,17 +418,22 @@ namespace NI_Elvis_Form2
                 int intSamplesPerBuffer = (int)samplesPerBuffer;
 
                 double[] rVal = new double[intSamplesPerBuffer];
+                //float newFreq = 1/ intSamplesPerBuffer;
 
                 for (int i = 0; i < intSamplesPerBuffer; i++)
                 {
-                    if (i <= (intSamplesPerBuffer / (float)4))
-                        rVal[i] = 4 * amplitude * frequency * (i * deltaT);
-                    else if ((i >= (intSamplesPerBuffer / (float)4)) && (i <= (intSamplesPerBuffer * (float)3 / 4)))
-                        rVal[i] = -4 * amplitude * frequency * (i * deltaT) + 2 * amplitude;
-                    else
-                        rVal[i] = 4 * amplitude * frequency * (i * deltaT) - 4 * amplitude;
+                    //if (i <= (intSamplesPerBuffer / (float)4))
+                    //    rVal[i] = 4 * amplitude * newFreq * (i * deltaT);
+                    //else if ((i >= (intSamplesPerBuffer / (float)4)) && (i <= (intSamplesPerBuffer * (float)3 / 4)))
+                    //    rVal[i] = (-4 * amplitude * newFreq * (i * deltaT)) + (2 * amplitude);
+                    //else
+                    //    rVal[i] = (4 * amplitude * newFreq * (i * deltaT)) - (4 * amplitude);
+
+                    rVal[i] = amplitude * (1f - 4f) * (float)Math.Abs(Math.Round(i * deltaT * frequency) -
+                        (i * deltaT * frequency));
+
                 }
-                    //rVal[i] = amplitude * Math.Sin((2.0 * Math.PI) * frequency * (i * deltaT));
+                //rVal[i] = amplitude * Math.Sin((2.0 * Math.PI) * frequency * (i * deltaT));
 
                 return rVal;
             }
@@ -440,10 +445,10 @@ namespace NI_Elvis_Form2
             {
                 // create the task and channel
                 fGenTask = new Task();
-                fGenTask.AOChannels.CreateVoltageChannel("Dev4/ao1",
+                fGenTask.AOChannels.CreateVoltageChannel("Dev4/ao0",
                     "",
-                    Convert.ToDouble(-10),
-                    Convert.ToDouble(10),
+                    Convert.ToDouble(-30),
+                    Convert.ToDouble(30),
                     AOVoltageUnits.Volts);
 
                 // verify the task before doing the waveform calculations
@@ -531,6 +536,16 @@ namespace NI_Elvis_Form2
                 fGenRun.Enabled = true;
                 fGenStop.Enabled = false;
             }
+        }
+
+        private void knob4_AfterChangeValue(object sender, AfterChangeNumericValueEventArgs e)
+        {
+            FrequencyNumeric.Value = (decimal)e.NewValue;
+        }
+
+        private void knob3_AfterChangeValue(object sender, AfterChangeNumericValueEventArgs e)
+        {
+            AmplitudeNumeric.Value = (decimal)e.NewValue;
         }
 
         //private void SineBtn_Click(object sender, EventArgs e)
