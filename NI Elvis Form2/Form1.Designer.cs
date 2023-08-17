@@ -30,12 +30,12 @@ namespace NI_Elvis_Form2
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.knob1 = new NationalInstruments.UI.WindowsForms.Knob();
+            this.HorizontalAxisKnob = new NationalInstruments.UI.WindowsForms.Knob();
             this.button1 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            this.knob2 = new NationalInstruments.UI.WindowsForms.Knob();
+            this.VerticalAxisKnob = new NationalInstruments.UI.WindowsForms.Knob();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.waveformGraph1 = new NationalInstruments.UI.WindowsForms.WaveformGraph();
             this.waveformPlot1 = new NationalInstruments.UI.WaveformPlot();
@@ -53,12 +53,16 @@ namespace NI_Elvis_Form2
             this.TriBtn = new System.Windows.Forms.Button();
             this.SquareBtn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.HorizontalAxisNumeric = new System.Windows.Forms.NumericUpDown();
+            this.VerticalAxisNumeric = new System.Windows.Forms.NumericUpDown();
             this.statusCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.comboBox2 = new System.Windows.Forms.ComboBox();
-            ((System.ComponentModel.ISupportInitialize)(this.knob1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.knob2)).BeginInit();
+            this.label2 = new System.Windows.Forms.Label();
+            this.WriterStatusTextBox = new System.Windows.Forms.TextBox();
+            this.SubscriberStatusTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.HorizontalAxisKnob)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VerticalAxisKnob)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.waveformGraph1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AmplitudeNumeric)).BeginInit();
@@ -66,24 +70,24 @@ namespace NI_Elvis_Form2
             ((System.ComponentModel.ISupportInitialize)(this.knob4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.knob3)).BeginInit();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.HorizontalAxisNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VerticalAxisNumeric)).BeginInit();
             this.SuspendLayout();
             // 
-            // knob1
+            // HorizontalAxisKnob
             // 
-            this.knob1.Caption = "Horizontal Axis (ms)";
-            this.knob1.Enabled = false;
-            this.knob1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.knob1.Location = new System.Drawing.Point(6, 19);
-            this.knob1.Name = "knob1";
-            this.knob1.OutOfRangeMode = NationalInstruments.UI.NumericOutOfRangeMode.CoerceToRange;
-            this.knob1.Range = new NationalInstruments.UI.Range(100D, 500D);
-            this.knob1.ScaleVisible = false;
-            this.knob1.Size = new System.Drawing.Size(153, 121);
-            this.knob1.TabIndex = 0;
-            this.knob1.Value = 100D;
-            this.knob1.AfterChangeValue += new NationalInstruments.UI.AfterChangeNumericValueEventHandler(this.knob1_AfterChangeValue);
+            this.HorizontalAxisKnob.Caption = "Horizontal Axis (ms)";
+            this.HorizontalAxisKnob.Enabled = false;
+            this.HorizontalAxisKnob.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HorizontalAxisKnob.Location = new System.Drawing.Point(6, 19);
+            this.HorizontalAxisKnob.Name = "HorizontalAxisKnob";
+            this.HorizontalAxisKnob.OutOfRangeMode = NationalInstruments.UI.NumericOutOfRangeMode.CoerceToRange;
+            this.HorizontalAxisKnob.Range = new NationalInstruments.UI.Range(100D, 500D);
+            this.HorizontalAxisKnob.ScaleVisible = false;
+            this.HorizontalAxisKnob.Size = new System.Drawing.Size(153, 121);
+            this.HorizontalAxisKnob.TabIndex = 0;
+            this.HorizontalAxisKnob.Value = 100D;
+            this.HorizontalAxisKnob.AfterChangeValue += new NationalInstruments.UI.AfterChangeNumericValueEventHandler(this.knob1_AfterChangeValue);
             // 
             // button1
             // 
@@ -129,19 +133,19 @@ namespace NI_Elvis_Form2
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // knob2
+            // VerticalAxisKnob
             // 
-            this.knob2.Caption = "Vertical Axis (V)";
-            this.knob2.Enabled = false;
-            this.knob2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.knob2.Location = new System.Drawing.Point(165, 19);
-            this.knob2.Name = "knob2";
-            this.knob2.OutOfRangeMode = NationalInstruments.UI.NumericOutOfRangeMode.CoerceToRange;
-            this.knob2.Size = new System.Drawing.Size(159, 121);
-            this.knob2.TabIndex = 5;
-            this.knob2.ToolTipsEnabled = false;
-            this.knob2.Value = 5D;
-            this.knob2.AfterChangeValue += new NationalInstruments.UI.AfterChangeNumericValueEventHandler(this.knob2_AfterChangeValue);
+            this.VerticalAxisKnob.Caption = "Vertical Axis (V)";
+            this.VerticalAxisKnob.Enabled = false;
+            this.VerticalAxisKnob.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VerticalAxisKnob.Location = new System.Drawing.Point(165, 19);
+            this.VerticalAxisKnob.Name = "VerticalAxisKnob";
+            this.VerticalAxisKnob.OutOfRangeMode = NationalInstruments.UI.NumericOutOfRangeMode.CoerceToRange;
+            this.VerticalAxisKnob.Size = new System.Drawing.Size(159, 121);
+            this.VerticalAxisKnob.TabIndex = 5;
+            this.VerticalAxisKnob.ToolTipsEnabled = false;
+            this.VerticalAxisKnob.Value = 5D;
+            this.VerticalAxisKnob.AfterChangeValue += new NationalInstruments.UI.AfterChangeNumericValueEventHandler(this.knob2_AfterChangeValue);
             // 
             // timer1
             // 
@@ -300,11 +304,11 @@ namespace NI_Elvis_Form2
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.numericUpDown3);
-            this.groupBox2.Controls.Add(this.knob1);
-            this.groupBox2.Controls.Add(this.knob2);
+            this.groupBox2.Controls.Add(this.HorizontalAxisNumeric);
+            this.groupBox2.Controls.Add(this.HorizontalAxisKnob);
+            this.groupBox2.Controls.Add(this.VerticalAxisKnob);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.numericUpDown1);
+            this.groupBox2.Controls.Add(this.VerticalAxisNumeric);
             this.groupBox2.Controls.Add(this.comboBox1);
             this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.button1);
@@ -316,42 +320,42 @@ namespace NI_Elvis_Form2
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Oscilloscope";
             // 
-            // numericUpDown3
+            // HorizontalAxisNumeric
             // 
-            this.numericUpDown3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDown3.Location = new System.Drawing.Point(23, 146);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
+            this.HorizontalAxisNumeric.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HorizontalAxisNumeric.Location = new System.Drawing.Point(23, 146);
+            this.HorizontalAxisNumeric.Maximum = new decimal(new int[] {
             500,
             0,
             0,
             0});
-            this.numericUpDown3.Minimum = new decimal(new int[] {
+            this.HorizontalAxisNumeric.Minimum = new decimal(new int[] {
             100,
             0,
             0,
             0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown3.TabIndex = 13;
-            this.numericUpDown3.Value = new decimal(new int[] {
+            this.HorizontalAxisNumeric.Name = "HorizontalAxisNumeric";
+            this.HorizontalAxisNumeric.Size = new System.Drawing.Size(120, 20);
+            this.HorizontalAxisNumeric.TabIndex = 13;
+            this.HorizontalAxisNumeric.Value = new decimal(new int[] {
             250,
             0,
             0,
             0});
             // 
-            // numericUpDown1
+            // VerticalAxisNumeric
             // 
-            this.numericUpDown1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDown1.Location = new System.Drawing.Point(183, 146);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.VerticalAxisNumeric.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VerticalAxisNumeric.Location = new System.Drawing.Point(183, 146);
+            this.VerticalAxisNumeric.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown1.TabIndex = 11;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.VerticalAxisNumeric.Name = "VerticalAxisNumeric";
+            this.VerticalAxisNumeric.Size = new System.Drawing.Size(120, 20);
+            this.VerticalAxisNumeric.TabIndex = 11;
+            this.VerticalAxisNumeric.Value = new decimal(new int[] {
             5,
             0,
             0,
@@ -373,11 +377,47 @@ namespace NI_Elvis_Form2
             this.comboBox2.Size = new System.Drawing.Size(121, 21);
             this.comboBox2.TabIndex = 11;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(656, 498);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(71, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Writer Status:";
+            // 
+            // WriterStatusTextBox
+            // 
+            this.WriterStatusTextBox.Location = new System.Drawing.Point(752, 491);
+            this.WriterStatusTextBox.Name = "WriterStatusTextBox";
+            this.WriterStatusTextBox.Size = new System.Drawing.Size(100, 20);
+            this.WriterStatusTextBox.TabIndex = 13;
+            // 
+            // SubscriberStatusTextBox
+            // 
+            this.SubscriberStatusTextBox.Location = new System.Drawing.Point(752, 525);
+            this.SubscriberStatusTextBox.Name = "SubscriberStatusTextBox";
+            this.SubscriberStatusTextBox.Size = new System.Drawing.Size(100, 20);
+            this.SubscriberStatusTextBox.TabIndex = 14;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(634, 532);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(93, 13);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Subscriber Status:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1017, 585);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.SubscriberStatusTextBox);
+            this.Controls.Add(this.WriterStatusTextBox);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -385,8 +425,8 @@ namespace NI_Elvis_Form2
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.knob1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.knob2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.HorizontalAxisKnob)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VerticalAxisKnob)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.waveformGraph1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.AmplitudeNumeric)).EndInit();
@@ -395,20 +435,21 @@ namespace NI_Elvis_Form2
             ((System.ComponentModel.ISupportInitialize)(this.knob3)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.HorizontalAxisNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VerticalAxisNumeric)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private NationalInstruments.UI.WindowsForms.Knob knob1;
+        private NationalInstruments.UI.WindowsForms.Knob HorizontalAxisKnob;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button2;
-        private NationalInstruments.UI.WindowsForms.Knob knob2;
+        private NationalInstruments.UI.WindowsForms.Knob VerticalAxisKnob;
         private System.Windows.Forms.Timer timer1;
         private NationalInstruments.UI.WindowsForms.WaveformGraph waveformGraph1;
         private NationalInstruments.UI.WaveformPlot waveformPlot1;
@@ -427,9 +468,13 @@ namespace NI_Elvis_Form2
         private System.Windows.Forms.Timer statusCheckTimer;
         private System.Windows.Forms.NumericUpDown AmplitudeNumeric;
         private System.Windows.Forms.NumericUpDown FrequencyNumeric;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown HorizontalAxisNumeric;
+        private System.Windows.Forms.NumericUpDown VerticalAxisNumeric;
         private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox WriterStatusTextBox;
+        private System.Windows.Forms.TextBox SubscriberStatusTextBox;
+        private System.Windows.Forms.Label label3;
     }
 }
 

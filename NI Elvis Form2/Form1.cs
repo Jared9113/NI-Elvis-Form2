@@ -14,6 +14,7 @@ using NationalInstruments.Controls;
 using System.Windows.Threading;
 using System.Diagnostics;
 using Task = NationalInstruments.DAQmx.Task;
+using NationalInstruments.NetworkVariable;
 
 namespace NI_Elvis_Form2
 {
@@ -26,6 +27,16 @@ namespace NI_Elvis_Form2
         private int samplingRate = 3000;
         //private static string waveType;
 
+        private NetworkVariableBufferedWriter<string[]> variable1Writer;
+        private string variable1location = @"\\localhost\system\variable1";
+
+        private NetworkVariableSubscriber<double[]> variable2Subscriber;
+        private string variable2location = @"\\localhost\system\variable2";
+
+
+
+        //private string wavetype;
+
 
         public Form1()
         {
@@ -35,6 +46,16 @@ namespace NI_Elvis_Form2
             if (comboBox1.Items.Count > 0)
                 comboBox1.SelectedIndex = 0;
             GetChannels();
+
+            variable1Writer = new NetworkVariableBufferedWriter<string[]>(variable1location);
+            variable1Writer.PropertyChanged += variable1Writer_PropertyChanged;
+            variable1Writer.Connect();
+
+
+            variable2Subscriber = new NetworkVariableSubscriber<double[]>(variable2location);
+            variable2Subscriber.ConnectionBehavior = SubscriberConnectionBehavior.UpdateOnConnect;
+            variable2Subscriber.PropertyChanged += variable2Subscriber_PropertyChanged;
+            variable2Subscriber.DataUpdated += variable2Subscriber_DataUpdated;
 
             //dispatcherTimer = new DispatcherTimer();
             //dispatcherTimer.Interval = TimeSpan.FromMilliseconds(100);
@@ -53,22 +74,47 @@ namespace NI_Elvis_Form2
         //    base.Dispose(disposing);
         //}
 
+        private void variable2Subscriber_DataUpdated(object sender, DataUpdatedEventArgs<double[]> e)
+        {
+            if (e.Data.HasValue)
+            {
+                double[] data = e.Data.GetValue();
+                //waveGraph.DataSource = data;
+                waveformGraph1.PlotY(data);
+
+
+            }
+
+        }
+
+        private void variable2Subscriber_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ConnectionStatus")
+                WriterStatusTextBox.Text = variable2Subscriber.ConnectionStatus.ToString();
+        }
+
+        private void variable1Writer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ConnectionStatus")
+                SubscriberStatusTextBox.Text = variable1Writer.ConnectionStatus.ToString();
+        }
+
         public void GetChannels()
         {
             int deviceNo = DaqSystem.Local.Devices.Length;
             if (deviceNo > 0)
             {
                 button1.Enabled = true;
-                knob1.Enabled = true;
-                knob2.Enabled = true;
+                HorizontalAxisKnob.Enabled = true;
+                VerticalAxisKnob.Enabled = true;
                 comboBox1.Enabled = true;
 
             }
             else
             {
                 button1.Enabled = false;
-                knob1.Enabled = false;
-                knob2.Enabled = false;
+                HorizontalAxisKnob.Enabled = false;
+                VerticalAxisKnob.Enabled = false;
                 comboBox1.Enabled = false;
             }
             //    int channelNo = DaqSystem.Local.GetPhysicalChannels(PhysicalChannelTypes.AI, PhysicalChannelAccess.External).Length;
@@ -93,6 +139,7 @@ namespace NI_Elvis_Form2
         private void knob1_AfterChangeValue(object sender, AfterChangeNumericValueEventArgs e)
         {
             samples = (int)e.NewValue;
+            HorizontalAxisNumeric.Value = (decimal)e.NewValue;
             xAxis1.Range = new NationalInstruments.UI.Range(0, e.NewValue);
 
         }
@@ -102,8 +149,8 @@ namespace NI_Elvis_Form2
             button1.Enabled = false;
             button2.Enabled = true;
             comboBox1.Enabled = false;
-
-            timer2.Start();
+            variable2Subscriber.Connect();
+            //timer2.Start();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -111,9 +158,9 @@ namespace NI_Elvis_Form2
             button1.Enabled = true;
             button2.Enabled = false;
             comboBox1.Enabled = true;
-
-            timer2.Stop();
-            oscilloscopeTask.Dispose();
+            variable2Subscriber.Disconnect();
+            //timer2.Stop();
+            //oscilloscopeTask.Dispose();
 
         }
 
@@ -172,6 +219,7 @@ namespace NI_Elvis_Form2
 
         private void knob2_AfterChangeValue(object sender, AfterChangeNumericValueEventArgs e)
         {
+            VerticalAxisNumeric.Value = (decimal)e.NewValue;
             yAxis1.Range = new NationalInstruments.UI.Range(-e.NewValue, e.NewValue);
 
         }
@@ -243,253 +291,20 @@ namespace NI_Elvis_Form2
         {
 
         }
-        public enum WaveformType
-        {
-            SineWave = 0,
-            SquareWave = 1,
-            TriangularWave = 2
-        }
-
-        public class FunctionGenerator
-        {
-            private double[] _data;
-            private double _resultingSampleClockRate;
-            private double _resultingFrequency;
-            private double _desiredSampleClockRate;
-            private double _samplesPerCycle;
-
-            public FunctionGenerator(
-                Timing timingSubobject,
-                string desiredFrequency,
-                string samplesPerBuffer,
-                string cyclesPerBuffer,
-                string type,
-                string amplitude)
-            {
-                WaveformType t = new WaveformType();
-                t = WaveformType.SineWave;// May have to change this
-                if (type == "Sine Wave")
-                    t = WaveformType.SineWave;
-                else if (type == "Triangular Wave")
-                    t = WaveformType.TriangularWave;
-                else if (type == "Square Wave")
-                    t = WaveformType.SquareWave;
-                else
-                    Debug.Assert(false, "Invalid Waveform Type");
-
-                Init(
-                    timingSubobject,
-                    Double.Parse(desiredFrequency),
-                    Double.Parse(samplesPerBuffer),
-                    Double.Parse(cyclesPerBuffer),
-                    t,
-                    Double.Parse(amplitude));
-            }
-
-            public FunctionGenerator(
-                Timing timingSubobject,
-                double desiredFrequency,
-                double samplesPerBuffer,
-                double cyclesPerBuffer,
-                WaveformType type,
-                double amplitude)
-            {
-                Init(
-                    timingSubobject,
-                    desiredFrequency,
-                    samplesPerBuffer,
-                    cyclesPerBuffer,
-                    type,
-                    amplitude);
-            }
-
-            private void Init(
-                Timing timingSubobject,
-                double desiredFrequency,
-                double samplesPerBuffer,
-                double cyclesPerBuffer,
-                WaveformType type,
-                double amplitude)
-            {
-                if (desiredFrequency <= 0)
-                    throw new ArgumentOutOfRangeException("desiredFrequency", desiredFrequency, "This parameter must be a positive number");
-                if (samplesPerBuffer <= 0)
-                    throw new ArgumentOutOfRangeException("samplesPerBuffer", samplesPerBuffer, "This parameter must be a positive number");
-                if (cyclesPerBuffer <= 0)
-                    throw new ArgumentOutOfRangeException("cyclesPerBuffer", cyclesPerBuffer, "This parameter must be a positive number");
-
-                // First configure the Task timing parameters
-                if (timingSubobject.SampleTimingType == SampleTimingType.OnDemand)
-                    timingSubobject.SampleTimingType = SampleTimingType.SampleClock;
-
-                _desiredSampleClockRate = (desiredFrequency * samplesPerBuffer) / cyclesPerBuffer;
-                _samplesPerCycle = samplesPerBuffer / cyclesPerBuffer;
-
-                // Determine the actual sample clock rate
-                timingSubobject.SampleClockRate = _desiredSampleClockRate;
-                _resultingSampleClockRate = timingSubobject.SampleClockRate;
-
-                _resultingFrequency = _resultingSampleClockRate / (samplesPerBuffer / cyclesPerBuffer);
-
-                switch (type)
-                {
-                    case WaveformType.SineWave:
-                        _data = GenerateSineWave(_resultingFrequency, amplitude, _resultingSampleClockRate, samplesPerBuffer);
-                        break;
-                    case WaveformType.TriangularWave:
-                        _data = GenerateTriangularWave(_resultingFrequency, amplitude, _resultingSampleClockRate, samplesPerBuffer);
-
-                        break;
-                    case WaveformType.SquareWave:
-                        _data = GenerateSquareWave(_resultingFrequency, amplitude, _resultingSampleClockRate, samplesPerBuffer);
-
-                        break;
-                    default:
-                        // Invalid type value
-                        Debug.Assert(false);
-                        break;
-                }
-            }
-
-            public double[] Data
-            {
-                get
-                {
-                    return _data;
-                }
-            }
-
-            public double ResultingSampleClockRate
-            {
-                get
-                {
-                    return _resultingSampleClockRate;
-                }
-            }
-
-            public static double[] GenerateSineWave(
-                double frequency,
-                double amplitude,
-                double sampleClockRate,
-                double samplesPerBuffer)
-            {
-                double deltaT = 1 / sampleClockRate; // sec./samp
-                int intSamplesPerBuffer = (int)samplesPerBuffer;
-
-                double[] rVal = new double[intSamplesPerBuffer];
-
-                for (int i = 0; i < intSamplesPerBuffer; i++)
-                    rVal[i] = amplitude * Math.Sin((2.0 * Math.PI) * frequency * (i * deltaT));
-
-                return rVal;
-            }
-
-            public static double[] GenerateSquareWave(
-                double frequency,
-                double amplitude,
-                double sampleClockRate,
-                double samplesPerBuffer)
-            {
-                double deltaT = 1 / sampleClockRate; // sec./samp
-                int intSamplesPerBuffer = (int)samplesPerBuffer;
-
-                double[] rVal = new double[intSamplesPerBuffer];
-
-                for (int i = 0; i < intSamplesPerBuffer; i++)
-                {
-                    if (i <= (intSamplesPerBuffer / 2))
-                        rVal[i] = amplitude;
-                    if (i >= (intSamplesPerBuffer / 2))
-                        rVal[i] = -amplitude;
-
-                }
-                    //rVal[i] = amplitude * Math.Sin((2.0 * Math.PI) * frequency * (i * deltaT));
-
-                return rVal;
-            }
-
-            public static double[] GenerateTriangularWave(
-                double frequency,
-                double amplitude,
-                double sampleClockRate,
-                double samplesPerBuffer)
-            {
-                double deltaT = 1 / sampleClockRate; // sec./samp
-                int intSamplesPerBuffer = (int)samplesPerBuffer;
-
-                double[] rVal = new double[intSamplesPerBuffer];
-                //float newFreq = 1/ intSamplesPerBuffer;
-
-                for (int i = 0; i < intSamplesPerBuffer; i++)
-                {
-                    //if (i <= (intSamplesPerBuffer / (float)4))
-                    //    rVal[i] = 4 * amplitude * newFreq * (i * deltaT);
-                    //else if ((i >= (intSamplesPerBuffer / (float)4)) && (i <= (intSamplesPerBuffer * (float)3 / 4)))
-                    //    rVal[i] = (-4 * amplitude * newFreq * (i * deltaT)) + (2 * amplitude);
-                    //else
-                    //    rVal[i] = (4 * amplitude * newFreq * (i * deltaT)) - (4 * amplitude);
-
-                    rVal[i] = amplitude * (1f - 4f) * (float)Math.Abs(Math.Round(i * deltaT * frequency) -
-                        (i * deltaT * frequency));
-
-                }
-                //rVal[i] = amplitude * Math.Sin((2.0 * Math.PI) * frequency * (i * deltaT));
-
-                return rVal;
-            }
-        }
+        
 
         private void fGenRun_Click(object sender, EventArgs e)
         {
-            try
-            {
-                // create the task and channel
-                fGenTask = new Task();
-                fGenTask.AOChannels.CreateVoltageChannel("Dev4/ao0",
-                    "",
-                    Convert.ToDouble(-30),
-                    Convert.ToDouble(30),
-                    AOVoltageUnits.Volts);
+            //_workerThread = new Thread(WriteData);
+            //_workerThread.Start();
 
-                // verify the task before doing the waveform calculations
-                fGenTask.Control(TaskAction.Verify);
+            string[] data = new string[] {FrequencyNumeric.Value.ToString(),
+            comboBox2.Text, AmplitudeNumeric.Value.ToString()};
+            variable1Writer.WriteData(new NetworkVariableData<string[]>(data));
 
-                // calculate some waveform parameters and generate data
-                FunctionGenerator fGen = new FunctionGenerator(
-                    fGenTask.Timing,
-                    FrequencyNumeric.Value.ToString(),
-                    "250",
-                    "5",
-                    comboBox2.Text,
-                    AmplitudeNumeric.Value.ToString());
+            fGenRun.Enabled = false;
+            fGenStop.Enabled = true;
 
-                // configure the sample clock with the calculated rate
-                fGenTask.Timing.ConfigureSampleClock("",
-                    fGen.ResultingSampleClockRate,
-                    SampleClockActiveEdge.Rising,
-                    SampleQuantityMode.ContinuousSamples, 1000);
-
-
-                AnalogSingleChannelWriter writer =
-                    new AnalogSingleChannelWriter(fGenTask.Stream);
-
-                //write data to buffer
-                writer.WriteMultiSample(false, fGen.Data);
-
-                //start writing out data
-                fGenTask.Start();
-
-                fGenRun.Enabled = false;
-                fGenStop.Enabled = true;
-
-                statusCheckTimer.Enabled = true;
-            }
-            catch (DaqException err)
-            {
-                statusCheckTimer.Enabled = false;
-                MessageBox.Show(err.Message);
-                fGenTask.Dispose();
-            }
             //Cursor.Current = Cursors.Default;
         }
 

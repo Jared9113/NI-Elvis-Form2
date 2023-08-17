@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NI_Elvis_Form2
@@ -22,11 +16,6 @@ namespace NI_Elvis_Form2
             client.BaseAddress = new Uri("https://localhost:7184/");
         }
 
-        private void Login_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             var userData = new User() { Email = textBox1.Text, Password = textBox2.Text };
@@ -36,10 +25,6 @@ namespace NI_Elvis_Form2
 
 
             var result = client.PostAsync("/api/Values/LoginPath", postContent).GetAwaiter().GetResult();
-
-            
-
-            
 
             if (result.IsSuccessStatusCode)
             {
@@ -60,11 +45,6 @@ namespace NI_Elvis_Form2
             }
 
             else { label2.Text = "Validation Error"; }
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
 
         }
     }
